@@ -1,0 +1,48 @@
+-- MedMate Pro Database Setup
+CREATE DATABASE IF NOT EXISTS medmate_pro;
+USE medmate_pro;
+
+-- Medicines Table
+CREATE TABLE IF NOT EXISTS medicines (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    company VARCHAR(100),
+    price DECIMAL(10,2),
+    quantity INT,
+    expiry_date DATE,
+    category VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Drug Interactions Table
+CREATE TABLE IF NOT EXISTS drug_interactions (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    medicine1 VARCHAR(100),
+    medicine2 VARCHAR(100),
+    risk_level ENUM('LOW', 'MEDIUM', 'HIGH'),
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Sample Data for Medicines
+INSERT INTO medicines (name, company, price, quantity, expiry_date, category) VALUES 
+('Paracetamol', 'Cipla', 25.50, 100, '2024-12-31', 'Fever'),
+('Amoxicillin', 'Sun Pharma', 180.00, 50, '2024-10-15', 'Antibiotic'),
+('Vitamin C', 'Himalaya', 300.00, 200, '2025-05-20', 'Immunity'),
+('Ibuprofen', 'Cipla', 45.00, 75, '2024-11-30', 'Pain Relief'),
+('Azithromycin', 'Ranbaxy', 120.00, 30, '2024-09-15', 'Antibiotic');
+
+-- Sample Data for Drug Interactions
+INSERT INTO drug_interactions (medicine1, medicine2, risk_level, description) VALUES
+('Paracetamol', 'Alcohol', 'HIGH', 'Liver damage risk'),
+('Amoxicillin', 'Blood Thinners', 'MEDIUM', 'Bleeding risk'),
+('Ibuprofen', 'Blood Pressure Medicine', 'HIGH', 'Kidney damage risk');
+
+-- Display created data
+SELECT 'Medicines Table:' AS '';
+SELECT * FROM medicines;
+
+SELECT 'Drug Interactions Table:' AS '';
+SELECT * FROM drug_interactions;
+
+SELECT '✅ Database setup completed successfully!' AS '';
