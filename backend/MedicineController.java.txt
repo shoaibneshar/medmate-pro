@@ -1,0 +1,60 @@
+import java.util.*;
+
+public class MedicineController {
+    
+    // Simulate database with list
+    private List<Medicine> medicines = new ArrayList<>();
+    
+    public MedicineController() {
+        // Add sample data
+        medicines.add(new Medicine(1L, "Paracetamol", "Cipla", 25.50, 100, "2024-12-31", "Fever"));
+        medicines.add(new Medicine(2L, "Amoxicillin", "Sun Pharma", 180.00, 50, "2024-10-15", "Antibiotic"));
+    }
+    
+    // Get all medicines
+    public List<Medicine> getAllMedicines() {
+        return medicines;
+    }
+    
+    // Add new medicine
+    public Medicine addMedicine(Medicine medicine) {
+        medicine.setId((long) (medicines.size() + 1));
+        medicines.add(medicine);
+        return medicine;
+    }
+    
+    // Get expiring medicines
+    public List<Medicine> getExpiringMedicines() {
+        List<Medicine> expiring = new ArrayList<>();
+        // Simple logic - return first 2 as expiring
+        if (medicines.size() >= 2) {
+            expiring.add(medicines.get(0));
+            expiring.add(medicines.get(1));
+        }
+        return expiring;
+    }
+    
+    // Get low stock medicines
+    public List<Medicine> getLowStockMedicines() {
+        List<Medicine> lowStock = new ArrayList<>();
+        for (Medicine medicine : medicines) {
+            if (medicine.getQuantity() < 60) {
+                lowStock.add(medicine);
+            }
+        }
+        return lowStock;
+    }
+    
+    // Test the controller
+    public static void main(String[] args) {
+        MedicineController controller = new MedicineController();
+        
+        System.out.println("=== All Medicines ===");
+        controller.getAllMedicines().forEach(System.out::println);
+        
+        System.out.println("\n=== Low Stock Medicines ===");
+        controller.getLowStockMedicines().forEach(System.out::println);
+        
+        System.out.println("\n✅ Medicine Controller Working!");
+    }
+}

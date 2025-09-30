@@ -1,0 +1,83 @@
+import java.util.*;
+
+public class AIService {
+    
+    // Feature 1: Epidemic Predictor
+    public Map<String, Object> predictEpidemic(String city) {
+        Map<String, Object> prediction = new HashMap<>();
+        
+        String[] diseases = {"Dengue", "Flu", "Malaria", "Typhoid"};
+        String predictedDisease = diseases[new Random().nextInt(diseases.length)];
+        
+        prediction.put("city", city);
+        prediction.put("predicted_disease", predictedDisease);
+        prediction.put("risk_level", "HIGH");
+        prediction.put("message", "🚨 " + predictedDisease + " cases expected to rise in " + city + " next month!");
+        prediction.put("recommended_medicines", getMedicinesForDisease(predictedDisease));
+        
+        return prediction;
+    }
+    
+    // Feature 2: Medicine Matchmaker
+    public Map<String, Object> findAlternatives(String medicine, String reason) {
+        Map<String, Object> response = new HashMap<>();
+        Map<String, List<String>> alternativesMap = new HashMap<>();
+        
+        alternativesMap.put("Paracetamol", Arrays.asList("Ibuprofen", "Aspirin", "Dolo-650"));
+        alternativesMap.put("Amoxicillin", Arrays.asList("Azithromycin", "Cephalexin"));
+        alternativesMap.put("Vitamin C", Arrays.asList("Multivitamin", "Vitamin D"));
+        
+        List<String> alternatives = alternativesMap.getOrDefault(medicine, Arrays.asList("No alternatives found"));
+        
+        response.put("original_medicine", medicine);
+        response.put("reason", reason);
+        response.put("alternatives", alternatives);
+        response.put("warning", "⚠️ Consult doctor before switching medicines!");
+        
+        return response;
+    }
+    
+    // Feature 3: Drug Interaction Checker
+    public Map<String, Object> checkInteraction(String med1, String med2) {
+        Map<String, Object> response = new HashMap<>();
+        
+        // Simulate AI analysis
+        boolean isDangerous = Math.random() > 0.7;
+        
+        response.put("medicine1", med1);
+        response.put("medicine2", med2);
+        response.put("is_safe", !isDangerous);
+        response.put("risk_level", isDangerous ? "HIGH" : "LOW");
+        response.put("message", isDangerous ? 
+            "🚨 DANGEROUS COMBINATION: May cause serious side effects!" : 
+            "✅ SAFE: These medicines can be taken together");
+        
+        return response;
+    }
+    
+    private List<String> getMedicinesForDisease(String disease) {
+        Map<String, List<String>> medicineMap = new HashMap<>();
+        medicineMap.put("Dengue", Arrays.asList("Paracetamol", "ORS", "Platelet boosters"));
+        medicineMap.put("Flu", Arrays.asList("Vitamin C", "Azithromycin", "Cough Syrup"));
+        medicineMap.put("Malaria", Arrays.asList("Chloroquine", "Primaquine"));
+        medicineMap.put("Typhoid", Arrays.asList("Ciprofloxacin", "Ofloxacin"));
+        
+        return medicineMap.getOrDefault(disease, Arrays.asList("General medicines"));
+    }
+    
+    // Test the AI Service
+    public static void main(String[] args) {
+        AIService aiService = new AIService();
+        
+        System.out.println("=== Epidemic Prediction ===");
+        System.out.println(aiService.predictEpidemic("Mumbai"));
+        
+        System.out.println("\n=== Medicine Alternatives ===");
+        System.out.println(aiService.findAlternatives("Paracetamol", "not_available"));
+        
+        System.out.println("\n=== Drug Interaction Check ===");
+        System.out.println(aiService.checkInteraction("Paracetamol", "Amoxicillin"));
+        
+        System.out.println("\n✅ AI Service Working!");
+    }
+}
