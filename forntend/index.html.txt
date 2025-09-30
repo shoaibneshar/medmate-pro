@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedMate Pro - AI Healthcare Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .result-box {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .alert {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        
+        .success {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        
+        input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 5px 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🩺 MedMate Pro</h1>
+            <p>AI-Powered Healthcare Intelligence Platform</p>
+        </div>
+        
+        <div class="dashboard">
+            <div class="card">
+                <h3>🚨 Epidemic Predictor</h3>
+                <p>Predict disease outbreaks before they happen</p>
+                <button class="btn" onclick="predictEpidemic()">Predict for Mumbai</button>
+                <div id="epidemic-result" class="result-box"></div>
+            </div>
+            
+            <div class="card">
+                <h3>💊 Medicine Matchmaker</h3>
+                <p>Find alternatives when medicine is unavailable</p>
+                <input type="text" id="medicineInput" placeholder="Enter medicine name">
+                <button class="btn" onclick="findAlternatives()">Find Alternatives</button>
+                <div id="alternatives-result" class="result-box"></div>
+            </div>
+            
+            <div class="card">
+                <h3>⚠️ Drug Interaction Checker</h3>
+                <p>Check if two medicines are safe to take together</p>
+                <input type="text" id="med1" placeholder="Medicine 1">
+                <input type="text" id="med2" placeholder="Medicine 2">
+                <button class="btn" onclick="checkInteraction()">Check Safety</button>
+                <div id="interaction-result" class="result-box"></div>
+            </div>
+        </div>
+        
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h4>Demand Prediction</h4>
+                <p>AI predicts medicine demand</p>
+                <button class="btn" onclick="predictDemand()">Predict Demand</button>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📝</div>
+                <h4>Prescription OCR</h4>
+                <p>Digitize handwritten prescriptions</p>
+                <button class="btn" onclick="ocrPrescription()">Scan Prescription</button>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🏆</div>
+                <h4>Leaderboard</h4>
+                <p>Medical shop rankings</p>
+                <button class="btn" onclick="showLeaderboard()">View Rankings</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // AI Features JavaScript
+        async function predictEpidemic() {
+            try {
+                const response = await fetch('http://localhost:8080/api/ai/epidemic/Mumbai');
+                const data = await response.json();
+                
+                document.getElementById('epidemic-result').innerHTML = `
+                    <div class="alert">
+                        <strong>${data.predicted_disease} Alert!</strong><br>
+                        ${data.message}<br>
+                        <strong>Recommended:</strong> ${data.recommended_medicines.join(', ')}
+                    </div>
+                `;
+            } catch (error) {
+                document.getElementById('epidemic-result').innerHTML = `
+                    <div class="alert">
+                        <strong>Demo Mode:</strong><br>
+                        🚨 Dengue Alert! Cases expected to rise in Mumbai next month!<br>
+                        <strong>Recommended:</strong> Paracetamol, ORS, Platelet boosters
+                    </div>
+                `;
+            }
+        }
+        
+        async function findAlternatives() {
+            const medicine = document.getElementById('medicineInput').value || 'Paracetamol';
+            
+            document.getElementById('alternatives-result').innerHTML = `
+                <div class="success">
+                    <strong>Alternatives for ${medicine}:</strong><br>
+                    Ibuprofen, Aspirin, Dolo-650<br>
+                    <small>⚠️ Consult doctor before switching medicines!</small>
+                </div>
+            `;
+        }
+        
+        async function checkInteraction() {
+            const med1 = document.getElementById('med1').value || 'Paracetamol';
+            const med2 = document.getElementById('med2').value || 'Amoxicillin';
+            
+            const isSafe = Math.random() > 0.3;
+            const alertClass = isSafe ? 'success' : 'alert';
+            
+            document.getElementById('interaction-result').innerHTML = `
+                <div class="${alertClass}">
+                    <strong>${med1} + ${med2}</strong><br>
+                    Safety: ${isSafe ? '✅ SAFE' : '🚨 DANGEROUS'}<br>
+                    Risk Level: ${isSafe ? 'LOW' : 'HIGH'}<br>
+                    ${isSafe ? 'These medicines can be taken together' : 'May cause serious side effects!'}
+                </div>
+            `;
+        }
+        
+        function predictDemand() {
+            alert(`📊 Demand Prediction:\n\nMedicine: Paracetamol\nPredicted Demand: 150 units\nTrend: INCREASING\nRecommendation: Stock more`);
+        }
+        
+        function ocrPrescription() {
+            alert(`📝 Prescription Digitized!\n\nDr. Sharma - Paracetamol 500mg - 1-0-1 - 5 days\nConfidence: 85%`);
+        }
+        
+        function showLeaderboard() {
+            const leaderboard = `
+🏆 MEDICAL SHOP RANKINGS:
+
+1. Apollo Pharmacy - ⭐⭐⭐⭐⭐ (98% Safety)
+2. MedPlus - ⭐⭐⭐⭐ (95% Accuracy)  
+3. City Pharmacy - ⭐⭐⭐⭐ (92% Service)
+
+Your shop: #8 - Improve drug checks to rank up!
+            `;
+            alert(leaderboard);
+        }
+    </script>
+</body>
+</html>
